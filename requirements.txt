@@ -1,0 +1,15 @@
+# Core browser automation
+selenium>=4.18.0
+
+# Google Sheets API (includes google-auth & helpers)
+google-api-python-client>=2.122.0
+google-auth>=2.28.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.0.0   # optional but handy if you ever add OAuth flows
+
+# HTML fetching & parsing for website-email discovery
+requests>=2.31.0
+beautifulsoup4>=4.12.3
+
+# Environment-variable convenience
+python-dotenv>=1.0.1          # optional; safe to omit if you won’t use .env files

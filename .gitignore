@@ -1,0 +1,60 @@
+# ───────────────────────── Python build artefacts ─────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# ───────────────────────── Virtual-envs ───────────────────────────────────
+.venv/
+venv/
+env/
+# Poetry / Pipenv / Hatch
+.pyvenv/
+# VS Code’s in-workspace venv
+.vscode/.mypy_cache/
+
+# ───────────────────────── Secrets & credentials ─────────────────────────
+credentials/
+*.json
+*.p12
+*.pem
+*.key
+*.crt
+*.der
+.env
+.env.*
+
+# ───────────────────────── Selenium / Chrome profiles ────────────────────
+.cache/maps-scraper-chrome/
+
+# ───────────────────────── Logs & runtime artefacts ───────────────────────
+*.log
+*.tmp
+*.cache
+*.sqlite3
+.DS_Store
+Thumbs.db
+# Jupyter checkpoints (if you ever prototype there)
+.ipynb_checkpoints/
+
+# ───────────────────────── IDE / Editor miscellany ───────────────────────
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+# JetBrains
+*.iml
+*.iws
+*.ipr
+out/
+
+# ───────────────────────── OS generated files ────────────────────────────
+ehthumbs.db
+Icon?
+desktop.ini
