@@ -91,3 +91,6 @@ Open the **output** sheet’s *Scraped* tab — freshly scraped rows are waiting
 | **Geo-targeted proxies** | Route each search via a proxy in the target country for more local results. |
 
 Pull requests welcome 🤝 — feel free to extend the scraper in any of these directions.
+
+
+uvicorn app.api:app --host 0.0.0.0 --port 3000 --reload

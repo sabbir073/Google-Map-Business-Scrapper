@@ -1,15 +1,23 @@
-# Core browser automation
+# Core Browser Automation
 selenium>=4.18.0
 
 # Google Sheets API (includes google-auth & helpers)
 google-api-python-client>=2.122.0
 google-auth>=2.28.0
 google-auth-httplib2>=0.2.0
-google-auth-oauthlib>=1.0.0   # optional but handy if you ever add OAuth flows
+google-auth-oauthlib>=1.0.0   # Optional but handy if you ever add OAuth flows
 
-# HTML fetching & parsing for website-email discovery
+# HTML fetching & parsing for website/email discovery
 requests>=2.31.0
 beautifulsoup4>=4.12.3
 
-# Environment-variable convenience
-python-dotenv>=1.0.1          # optional; safe to omit if you won’t use .env files
+# FastAPI for API Server
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0     # Includes 'uvicorn' with recommended extras like 'watchgod' and 'websockets'
+
+# Environment Variable Convenience
+python-dotenv>=1.0.1          # Optional; for .env file loading
+
+# Optional (if needed later)
+pydantic>=2.7.0               # Already required by FastAPI, but can pin it if you use advanced validation
+httpx>=0.27.0                 # Optional: for async HTTP requests (not used now, but useful later)
