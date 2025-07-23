@@ -13,9 +13,15 @@ app = FastAPI(title="Maps Scraper API")
 JOBS = {}   # job_id -> {status, log}
 
 # ───── Allow CORS if needed ─────
+origins = [
+    "https://app.smartscrap.site",
+    "https://gmap.smartscrap.site",
+    "http://localhost:3000",  # for local testing
+    "http://127.0.0.1:3000"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,9 +99,14 @@ def run_direct(max_rows: int = 150, creds: HTTPAuthorizationCredentials = Depend
 async def log_stream(websocket: WebSocket, job_id: str):
     await websocket.accept()
     last_log = ""
+    heartbeat_interval = 5  # seconds
+    heartbeat_count = 0
+
     try:
         while True:
             await asyncio.sleep(1)
+            heartbeat_count += 1
+
             job = JOBS.get(job_id)
             if not job:
                 await websocket.send_text("❌ Job not found.")
@@ -106,9 +117,19 @@ async def log_stream(websocket: WebSocket, job_id: str):
                 await websocket.send_text(current_log)
                 last_log = current_log
 
+            if heartbeat_count >= heartbeat_interval:
+                await websocket.send_text("💓 heartbeat")
+                heartbeat_count = 0
+
             if job["status"] in ("done", "error"):
                 break
+
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {job_id}")
+    except Exception as e:
+        print(f"WebSocket error: {e}")
     finally:
-        await websocket.close()
+        try:
+            await websocket.close()
+        except RuntimeError:
+            pass

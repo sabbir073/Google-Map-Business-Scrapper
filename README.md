@@ -94,3 +94,5 @@ Pull requests welcome 🤝 — feel free to extend the scraper in any of these d
 
 
 uvicorn app.api:app --host 0.0.0.0 --port 3000 --reload
+
+cloudflared tunnel run smart-scrap-tool
