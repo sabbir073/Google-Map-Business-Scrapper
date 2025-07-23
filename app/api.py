@@ -1,6 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import subprocess, uuid, shlex, pathlib, os, asyncio
 from dotenv import load_dotenv
 
@@ -10,21 +11,20 @@ API_TOKEN = os.getenv("API_TOKEN")
 
 # ───── FastAPI Setup ─────
 app = FastAPI(title="Maps Scraper API")
-JOBS = {}   # job_id -> {status, log}
+JOBS = {}  # job_id -> {status, log}
 
-# ───── Allow CORS if needed ─────
-origins = [
-    "https://app.smartscrap.site",
-    "https://gmap.smartscrap.site",
-    "http://localhost:3000",  # for local testing
-    "http://127.0.0.1:3000"
-]
+# ───── Allow CORS ─────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "https://app.smartscrap.site",
+        "https://gmap.smartscrap.site",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
 
 # ───── Script Command Template ─────
@@ -78,6 +78,14 @@ def _run(job_id: str, max_rows: int):
 
 # ───── API Endpoints ─────
 
+@app.options("/run")
+async def options_run():
+    response = JSONResponse(content={"message": "ok"})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+    return response
+
 @app.post("/run")
 def run(background_tasks: BackgroundTasks, max_rows: int = 150, creds: HTTPAuthorizationCredentials = Depends(verify_token)):
     job_id = str(uuid.uuid4())
@@ -88,6 +96,14 @@ def run(background_tasks: BackgroundTasks, max_rows: int = 150, creds: HTTPAutho
 @app.get("/status/{job_id}")
 def status(job_id: str, creds: HTTPAuthorizationCredentials = Depends(verify_token)):
     return JOBS.get(job_id, {"error": "not found"})
+
+@app.options("/run-direct")
+async def options_run_direct():
+    response = JSONResponse(content={"message": "ok"})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+    return response
 
 @app.post("/run-direct")
 def run_direct(max_rows: int = 150, creds: HTTPAuthorizationCredentials = Depends(verify_token)):
